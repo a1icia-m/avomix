@@ -24,6 +24,7 @@ class HandTracker:
         self.start_time = time.time() * 1000
 
         self.pinch_pos = {"Left": None, "Right": None}
+        self.press_pos = {"Left": None, "Right": None}
         self.state = {"Left": 0, "Right": 0}
 
     def _result_callback(self, result, output_image, timestamp_ms):
@@ -51,6 +52,7 @@ def draw_hand_skeleton(frame, tracker, result):
     # Reset all hand states at start of each frame
     for hand in ["Left", "Right"]:
         tracker.pinch_pos[hand] = None
+        tracker.press_pos[hand] = None
         tracker.state[hand] = 0
 
     if not result or not result.hand_landmarks:
@@ -75,7 +77,6 @@ def draw_hand_skeleton(frame, tracker, result):
 
                 dist = abs(x2 - x1) + abs(y2 - y1)
 
-                # Hysteresis: use different threshold based on previous state
                 if (start_idx, end_idx) == (4, 8):
                     threshold = UNMERGE_DIST if state == 1 else MERGE_DIST
                 else:
@@ -87,6 +88,7 @@ def draw_hand_skeleton(frame, tracker, result):
                         tracker.pinch_pos[handedness] = (x_mid, y_mid)
                         state = 1
                     else:
+                        tracker.press_pos[handedness] = (x_mid, y_mid)
                         state = 2
 
                     cv2.circle(frame, (x_mid, y_mid), 6, (255, 255, 255), -1)

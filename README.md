@@ -1,1 +1,1 @@
-# dj-internal-proj
+# AvoMix

@@ -1,4 +1,32 @@
+# Virtual environments
 .venv/
-hand_landmarker.task
+venv/
+env/
+
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Audio/song data
 songs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Optional
+.env
+*.log

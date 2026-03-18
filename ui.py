@@ -60,3 +60,32 @@ class PlayButton(Button):
 
     def deactivate(self):
         self.selector.pause(self.side)
+
+
+class StemButton(Button):
+    """Tap to toggle a stem (bass, drums, other, vocals) on/off for a deck."""
+
+    def __init__(self, x, y, width, height, selector, side, stem_index, label, **kwargs):
+        super().__init__(x, y, width, height, **kwargs)
+        self.selector = selector
+        self.side = side
+        self.stem_index = stem_index
+        self.label = label
+        self.on = selector.active_stems[side][stem_index]
+
+    def activate(self):
+        self.selector.set_stem_active(self.side, self.stem_index, True)
+
+    def deactivate(self):
+        self.selector.set_stem_active(self.side, self.stem_index, False)
+
+    def draw(self, frame):
+        self.on = self.selector.active_stems[self.side][self.stem_index]
+        super().draw(frame)
+        # Label text (centered)
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        scale = 0.35
+        (tw, th), _ = cv2.getTextSize(self.label, font, scale, 1)
+        tx = self.x + (self.width - tw) // 2
+        ty = self.y + (self.height + th) // 2
+        cv2.putText(frame, self.label, (tx, ty), font, scale, (255, 255, 255), 1)
